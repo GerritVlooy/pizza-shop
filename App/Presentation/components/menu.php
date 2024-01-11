@@ -8,6 +8,5 @@
         <?php if(isset($_SESSION["login"])):?>
         <li><a href="accountController.php">Account</a></li>
         <?php endif; ?>
-        
     </ul>
 </nav>

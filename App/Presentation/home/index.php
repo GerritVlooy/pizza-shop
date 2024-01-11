@@ -47,4 +47,9 @@
         <hr/>   
     </div>
     <?php require_once $winkelwagen; ?>
+    <?php if(!empty($_SESSION['winkelwagen'])): ?>
+        <div>
+            <a href="afrekenenController.php">Afrekenen</a>
+        </dv>
+    <?php endif; ?>
 </div>

@@ -47,6 +47,43 @@ class KlantDAO extends DBConfig{
         return $klant;
     }
 
+    public function getById(int $id): Klant {
+        $sql = "SELECT klant_id, naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord, opmerkingen 
+                FROM klanten 
+                WHERE klant_id = :klant_id";
+
+        $dbh = new PDO(parent::$DB_CONNSTRING, parent::$DB_USERNAME,
+            parent::$DB_PASSWORD);
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute(array(':email' => $email));
+        $rij = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $adresDAO = new AdresDAO();
+        $adres = $adresDAO->getById((int) $rij['adres_id']);
+        if($rij['opmerkingen'] === null) {
+            $rij['opmerkingen'] = "";
+        }
+        if($rij['email'] === null) {
+            $rij['email'] === "";
+            $rij['wachtwoord'] === "";
+        }
+        
+        $klant = new Klant(
+            $id, 
+            $rij['naam'], 
+            $rij['voornaam'], 
+            $rij["email"], 
+            $adres, 
+            $rij['telefoon_gsm'], 
+            $rij ['wachtwoord'],
+            $rij['opmerkingen']
+        );
+
+        $dbh = null;
+        return $klant;
+    }
+
     public function create(
         string $naam,
         string $voornaam,
@@ -54,7 +91,7 @@ class KlantDAO extends DBConfig{
         int $adresId,
         string $telefoonGSM,
         string $wachtwoord
-    ) {
+    ): int {
         $sql = "INSERT INTO klanten (naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord, opmerkingen) 
                 VALUES (:naam, :voornaam, :email, :adres_id, :telefoon_gsm, :wachtwoord, :opmerkingen)";
 
@@ -71,8 +108,11 @@ class KlantDAO extends DBConfig{
             ':wachtwoord' => $wachtwoord,
             ':opmerkingen' => ""
         ));
+        $klantId = $dbh->lastInsertId();
 
         $dbh = null;
+
+        return (int) $klantId;
     }
 
 }

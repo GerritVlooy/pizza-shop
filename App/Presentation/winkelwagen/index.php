@@ -1,6 +1,6 @@
 <h2>Winkelwagen</h2>
 <div>
-<?php if (!empty($_SESSION['winkelwagen'])): ?>
+<?php if(!empty($_SESSION['winkelwagen'])): ?>
     <ul>
         <?php $totaalSom = 0; ?>
         <?php foreach ($_SESSION['winkelwagen'] as $index => $artikel): ?>

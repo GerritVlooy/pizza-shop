@@ -1,5 +1,5 @@
 CREATE TABLE Pizzas (
-    pizza_id INT PRIMARY KEY,
+    pizza_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
     pizza_naam VARCHAR(255) NOT NULL,
     pizza_beschrijving VARCHAR(255) NOT NULL,
     prijs DECIMAL(8, 2) NOT NULL
@@ -13,7 +13,7 @@ VALUES
     (4, 'Fontanella', 'tomaten - Mozarella - ajuin - artisjokken - garnalen - ansjovis - olijven - hesp - champignon' , 13.99);
     
 CREATE TABLE Ingredienten (
-    ingredient_id INT PRIMARY KEY,
+    ingredient_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
     ingredient_naam VARCHAR(100) NOT NULL, 
     prijs DECIMAL(8, 2) NOT NULL
 );
@@ -27,25 +27,25 @@ VALUES
     (5, 'Pesto', 2.5);
 
 CREATE TABLE klanten (
-    klant_id INT PRIMARY KEY AUTO_INCREMENT,
+    klant_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     naam VARCHAR(255) NOT NULL,
     voornaam VARCHAR(255) NOT NULL,
     email VARCHAR(255),
-	adres_id INT,
+	adres_id INT(10) UNSIGNED NOT NULL,
     telefoon_gsm VARCHAR(15) NOT NULL,
     wachtwoord VARCHAR(32),
     opmerkingen VARCHAR(255)
 );
 
 CREATE TABLE adressen (
-    adres_id INT PRIMARY KEY AUTO_INCREMENT,
+    adres_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     straat VARCHAR(255) NOT NULL,
     huisnummer VARCHAR(10) NOT NULL,
-    woonplaats_id INT
+    woonplaats_id INT(10) UNSIGNED NOT NULL
 );
 
 CREATE TABLE woonplaatsen (
-    woonplaats_id INT PRIMARY KEY AUTO_INCREMENT,
+    woonplaats_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     woonplaats_naam VARCHAR(255) NOT NULL,
 	postcode VARCHAR(10) NOT NULL
 );

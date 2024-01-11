@@ -4,7 +4,7 @@
     <div>
     <form action="" method="post">
             <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email"  value="<?php echo $email ?>" required>
 
             <label for="wachtwoord">Wachtwoord:</label>
             <input type="password" id="wachtwoord" name="wachtwoord" required>

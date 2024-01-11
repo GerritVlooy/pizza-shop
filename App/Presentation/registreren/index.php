@@ -24,14 +24,24 @@
         <input type="tel" id="telefoonGSM" name="telefoonGSM" value="<?php echo $telefoonGSM ?>" required>
 
         <label for="email">E-mailadres:</label>
-        <input type="email" id="email" name="email" value="<?php echo $email ?>" required>
+        <input type="email" id="email" name="email" value="<?php echo $email ?>">
 
         <label for="wachtwoord">Wachtwoord:</label>
-        <input type="password" id="wachtwoord" name="wachtwoord" required>
+        <input type="password" id="wachtwoord" name="wachtwoord">
 
         <label for="wachtwoordCheck">Wachtwoord herhalen:</label>
-        <input type="password" id="wachtwoordCheck" name="wachtwoordCheck" required>
+        <input type="password" id="wachtwoordCheck" name="wachtwoordCheck">
 
-        <button type="submit">Registreren</button>
+        <div <?php if(!isset($checkbox)): ?>
+                <?php echo "hidden" ?>
+            <?php endif; ?>>
+            <label for="accountcheck">Account maken</label>
+            <input type ="checkbox" id="accountCheck" name="accountCheck" 
+                <?php if(!isset($checkbox)): ?>
+                    <?php echo "checked"?>
+                <?php endif; ?> />
+        </div>
+        
+        <button type="submit">verzenden</button>
     </form>
 </div>

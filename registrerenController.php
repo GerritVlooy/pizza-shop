@@ -9,13 +9,18 @@ use App\Business\WoonplaatsService;
 use App\Business\KlantService;
 
 $title = "Registreren";
+if(isset($checkbox)) {
+    $title = "Geef uw gegevens in";
+}
 $view = "App/Presentation/registreren/index.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_SESSION['klantId'])) {
     $woonplaatsService = new WoonplaatsService();
     $adresService = new AdresService();
     $klantService = new KlantService();
     $veldControleService = new VeldControleService();
+
     $naamTelefoonVelden = $veldControleService->checkNaamTelefoonVelden(
         $_POST['voornaam'],
         $_POST['naam'],
@@ -28,22 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         (int) $_POST['postcode'], 
         $_POST['woonplaats']
     );
+    $bericht = array_merge($naamTelefoonVelden, $adresVelden);
 
-    $emailWachtwoordVelden = $veldControleService->checkEmailWachtwoordVelden(
-        $_POST['email'],
-        $_POST['wachtwoord']
-    );
+    if(isset($_POST['accountCheck'])) {
 
-    $wachtwoordControle = $veldControleService->checkWachtwoorden(
-        $_POST['wachtwoord'], 
-        $_POST['wachtwoordCheck']);
-
-    $bericht = array_merge($naamTelefoonVelden, $adresVelden, $emailWachtwoordVelden);
+        $emailWachtwoordVelden = $veldControleService->checkEmailWachtwoordVelden(
+            $_POST['email'],
+            $_POST['wachtwoord']
+        );
     
+        $wachtwoordControle = $veldControleService->checkWachtwoorden(
+            $_POST['wachtwoord'], 
+            $_POST['wachtwoordCheck']
+        );
+    
+        $bericht = array_merge($bericht, $emailWachtwoordVelden, $wachtwoordControle);
+    }
+
     if(empty($bericht)) {
-        $woonplaatsCheck = $woonplaatsService->checkWoonplaats($_POST['woonplaats'], (int) $_POST['postcode']);
-        $emailCheck = $klantService->checkEmail($_POST['email']);
-        $bericht = array_merge($woonplaatsCheck, $emailCheck);
+        $bericht = $woonplaatsService->checkWoonplaats($_POST['woonplaats'], (int) $_POST['postcode']);
+        if(isset($_POST['accountCheck'])) {
+            $emailCheck = $klantService->checkEmail($_POST['email']);
+            $bericht = array_merge($bericht, $emailCheck);
+        }
     }
 
     if(empty($bericht)) {
@@ -51,15 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(($adresService->checkAdres($_POST['straat'], $_POST['huisnummer'], $woonplaatsId) === false)) {
             $adresService->createAdres($_POST['straat'], $_POST['huisnummer'], $woonplaatsId);
         }
-        $klantService->createKlant(
-            $_POST['voornaam'],
-            $_POST['naam'],
-            $_POST['email'],
-            (int) $adresService->getAdresIdByParameters($_POST['straat'], $_POST['huisnummer'], $woonplaatsId),
-            $_POST['telefoonGSM'],
-            $_POST['wachtwoord']
-        );
-        $bericht[] = "Registratie Succesvol!";
+        
+        if(!isset($_SESSION['klantId'])) {
+            $_SESSION['klantId'] = $klantService->createKlant(
+                $_POST['voornaam'],
+                $_POST['naam'],
+                $_POST['email'],
+                (int) $adresService->getAdresIdByParameters($_POST['straat'], $_POST['huisnummer'], $woonplaatsId),
+                $_POST['telefoonGSM'],
+                $_POST['wachtwoord']
+            );
+        }
+        
+        if(isset($doorsturen)) {
+            header("Location: afrekenenController.php");
+            die();
+        }
+
+        $bericht[] = "Succes!";
     }
     
 }

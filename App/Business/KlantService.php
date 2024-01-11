@@ -27,8 +27,9 @@ class KlantService {
         int $adresId,
         string $telefoonGSM,
         string $wachtwoord
-    ) {
-        $this->klantDAO->create(
+    ):int {
+        $this->klantDAO = new KlantDAO();
+        $klantId = $this->klantDAO->create(
             $naam,
             $voornaam,
             $email,
@@ -36,6 +37,7 @@ class KlantService {
             $telefoonGSM,
             md5($wachtwoord)
         );
+        return $klantId;
     }
 
     public function checkLogin(string $email, string $wachtwoord): array {
@@ -48,6 +50,17 @@ class KlantService {
         }
 
         return $this->foutBericht;
+    }
+
+    public function getKlantId(string $email): int {
+        $this->klantDAO = new KlantDAO();
+        $klant = $this->klantDAO->getByEmail($email);
+        return $klant->getId();
+    }
+
+    public function getKlantGegevensById(int $id): Klant {
+        $this->klantDAO = new KlantDAO();
+        return $this->klantDAO->getById($id);
     }
 
 }
