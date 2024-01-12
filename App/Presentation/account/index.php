@@ -14,5 +14,6 @@
     </div>
 <?php endif;?>
 <?php if(isset($_SESSION["login"])): ?>
+    <div><a href="updateAdresController.php">Gegevens Bijwerken</a></div>
     <div><a href="?uitloggen">Uitloggen</a></div>
 <?php endif; ?>

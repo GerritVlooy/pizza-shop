@@ -20,4 +20,12 @@ Class Woonplaats {
         return $this->id;
     }
 
+    public function getNaam(): string {
+        return $this->naam;
+    }
+
+    public function getPostcode(): int {
+        return $this->postcode;
+    }
+
 }

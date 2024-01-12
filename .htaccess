@@ -1,0 +1,14 @@
+<Files "bootstrap.php">
+  Order Allow,Deny
+  Deny from all
+</Files>
+
+<Files "registratieVeldController.php">
+  Order Allow,Deny
+  Deny from all
+</Files>
+
+<Files "winkelWagenController.php">
+  Order Allow,Deny
+  Deny from all
+</Files>

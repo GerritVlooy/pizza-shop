@@ -9,6 +9,7 @@
                     <th>Pizza</th>
                     <th>Beschrijving</th>
                     <th>Prijs</th>
+                    <th>Promo</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,6 +18,11 @@
                         <td><?php echo $pizza->getNaam(); ?></td>
                         <td><?php echo $pizza->getBeschrijving(); ?></td>
                         <td><?php echo $pizza->getPrijs(); ?></td>
+                        <td>
+                            <?php if($pizzaService->getPromoPrijsForPizza($pizza, $klantHomeId) !== null): ?>
+                                <?php echo $pizzaService->getPromoPrijsForPizza($pizza, $klantHomeId) ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
@@ -33,7 +39,7 @@
                 <?php endforeach;?>
             </select>
             <label for="hoeveelheid">Hoeveelheid:</label>
-            <input type="number" name="hoeveelheid" id="hoeveelheid" value="1" min="1" required>
+            <input type="number" class="hoeveelheidVeld" name="hoeveelheid" id="hoeveelheid" value="1" min="1" required>
             <h3>Extra's</h3>
             <?php foreach($ingredientLijst as $ingredient):?>
                 <input type ="checkbox" id="<?php echo $ingredient->getNaam();?>" name="extras[]"

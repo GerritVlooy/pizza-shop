@@ -5,6 +5,7 @@ namespace App\Business;
 
 use App\Data\KlantDAO;
 use App\Entities\Klant;
+use App\Entities\Adres;
 
 class KlantService {
 
@@ -23,21 +24,24 @@ class KlantService {
     public function createKlant(
         string $naam,
         string $voornaam,
-        string $email,
+        ?string $email,
         int $adresId,
         string $telefoonGSM,
-        string $wachtwoord
-    ):int {
+        ?string $wachtwoord
+    ): int {
+        if($wachtwoord !== null) {
+            $wachtwoord = md5($wachtwoord);
+        }
         $this->klantDAO = new KlantDAO();
-        $klantId = $this->klantDAO->create(
+        return $this->klantDAO->create(
             $naam,
             $voornaam,
             $email,
             $adresId,
             $telefoonGSM,
-            md5($wachtwoord)
+            $wachtwoord
         );
-        return $klantId;
+        
     }
 
     public function checkLogin(string $email, string $wachtwoord): array {
@@ -61,6 +65,39 @@ class KlantService {
     public function getKlantGegevensById(int $id): Klant {
         $this->klantDAO = new KlantDAO();
         return $this->klantDAO->getById($id);
+    }
+
+    public function getKlantByEmail(string $email): Klant {
+        $this->klantDAO = new KlantDAO();
+        $klant = $this->klantDAO->getByEmail($email);
+        $klant->setEmail();
+        $klant->setWachtwoord();
+        return $klant;
+    }
+
+    public function createKlantSession(
+        string $naam,
+        string $voornaam,
+        Adres $adres,
+        string $telefoonGSM
+    ): Klant {
+        return new Klant(
+            0,
+            $naam,
+            $voornaam,
+            "",
+            $adres,
+            $telefoonGSM,
+            ""
+        );
+    }
+
+    public function updateKlant(
+        string $email,
+        int $adresId
+        ) {
+        $this->klantDAO = new KlantDAO();
+        $this->klantDAO->update($email, $adresId);
     }
 
 }

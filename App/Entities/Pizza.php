@@ -33,4 +33,8 @@ Class Pizza {
     public function getPrijs(): float {
         return $this->prijs;
     }
+
+    public function setPrijs(float $prijs) {
+        $this->prijs = $prijs;
+    }
 }

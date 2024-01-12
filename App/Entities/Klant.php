@@ -15,7 +15,6 @@ Class Klant {
     private Adres $adres;
     private string $telefoonGSM;
     private string $wachtwoord;
-    private string $opmerking;
 
     public function __construct(
         int $id,
@@ -25,7 +24,6 @@ Class Klant {
         Adres $adres,
         string $telefoonGSM,
         string $wachtwoord,
-        string $opmerking
     ) {
         $this->id = $id;
         $this->naam = $naam;
@@ -34,7 +32,6 @@ Class Klant {
         $this->adres = $adres;
         $this->telefoonGSM = $telefoonGSM;
         $this->wachtwoord = $wachtwoord;
-        $this->opmerking = $opmerking;
     }
 
     public function getId(): int {
@@ -55,5 +52,25 @@ Class Klant {
 
     public function getAdres(): Adres {
         return $this->adres;
+    }
+
+    public function getNaam(): string {
+        return $this->naam;
+    }
+
+    public function getTelefoonGSM(): string {
+        return $this->telefoonGSM;
+    }
+
+    public function setEmail() {
+        $this->email = "";
+    }
+
+    public function setWachtwoord() {
+        $this->wachtwoord = "";
+    }
+
+    public function setId(int $id) {
+        $this->id = $id;
     }
 }

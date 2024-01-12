@@ -10,10 +10,14 @@ use App\Exceptions\WoonplaatsBestaatNietException;
 class WoonplaatsService {
     
     private WoonplaatsDAO $woonplaatsDAO;
+
+    public function __construct()
+    {
+        $this->woonplaatsDAO = new WoonplaatsDAO();
+    }
     
     public function checkWoonplaats(string $woonplaatsNaam, int $postcode): array {
         $foutBericht = [];
-        $this->woonplaatsDAO = new WoonplaatsDAO();
 
         try {
             $this->woonplaatsDAO->getByNaamAndPostcode($woonplaatsNaam, $postcode);
@@ -25,7 +29,6 @@ class WoonplaatsService {
     }
 
     public function getWoonplaatsId(string $woonplaatsNaam, int $postcode): int {
-        $this->woonplaatsDAO = new WoonplaatsDAO();
         $woonplaats = $this->woonplaatsDAO->getByNaamAndPostcode($woonplaatsNaam, $postcode);
         return $woonplaats->getId();
     }

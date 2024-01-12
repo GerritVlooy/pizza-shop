@@ -41,4 +41,22 @@ class PizzaDAO extends DBConfig {
         $dbh = null;
         return $pizza;
     }
+
+    public function getPizzaById(int $pizzaId): ?Pizza
+    {
+        $sql = "SELECT pizza_id, pizza_naam, pizza_beschrijving, prijs FROM pizzas WHERE pizza_id = :pizza_id";
+
+        $dbh = new PDO(parent::$DB_CONNSTRING, parent::$DB_USERNAME, parent::$DB_PASSWORD);
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute(array(':pizza_id' => $pizzaId));
+        $rij = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($rij === false) {
+            return null;
+        }
+
+        $pizza = new Pizza($pizzaId, $rij["pizza_naam"], $rij["pizza_beschrijving"], (float) $rij["prijs"]);
+        $dbh = null;
+        return $pizza;
+    }
 }

@@ -33,8 +33,7 @@ CREATE TABLE klanten (
     email VARCHAR(255),
 	adres_id INT(10) UNSIGNED NOT NULL,
     telefoon_gsm VARCHAR(15) NOT NULL,
-    wachtwoord VARCHAR(32),
-    opmerkingen VARCHAR(255)
+    wachtwoord VARCHAR(32)
 );
 
 CREATE TABLE adressen (
@@ -69,3 +68,68 @@ REFERENCES adressen(adres_id);
 ALTER TABLE adressen
 ADD FOREIGN KEY (woonplaats_id)
 REFERENCES woonplaatsen(woonplaats_id);
+
+CREATE TABLE promotie_pizzas (
+    promotie_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    pizza_id INT(10) UNSIGNED NOT NULL,
+    promotie_prijs DECIMAL(8, 2) NOT NULL,
+    FOREIGN KEY (pizza_id) REFERENCES Pizzas(pizza_id)
+);
+
+CREATE TABLE promotie_klanten (
+	promotie_klanten_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    promotie_id INT(10) UNSIGNED NOT NULL,
+    klant_id INT(10) UNSIGNED NOT NULL,
+    FOREIGN KEY (klant_id) REFERENCES klanten(klant_id),
+    FOREIGN KEY (promotie_id) REFERENCES promotie_pizzas(promotie_id)
+);
+
+INSERT INTO promotie_pizzas (pizza_id, promotie_prijs)
+VALUES
+    (1, 8.99),
+    (2, 10.49),
+    (3, 9.99),
+    (4, 11.49),
+    (1, 7.99);
+
+CREATE TABLE bestellingen (
+bestelling_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+klant_id INT(10) UNSIGNED NOT NULL,
+opmerkingen VARCHAR(400),
+bestelling_datum DATETIME,
+FOREIGN KEY (klant_id) REFERENCES klanten(klant_id)
+);
+
+CREATE TABLE bestelde_pizzas (
+bestelde_pizzas_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+bestelling_id INT(10) UNSIGNED NOT NULL,
+pizza_id  INT(10) UNSIGNED NOT NULL,
+promotie_klanten_id INT(10) UNSIGNED,
+hoeveelheid INT(10) UNSIGNED NOT NULL,
+FOREIGN KEY (pizza_id) REFERENCES pizzas(pizza_id),
+FOREIGN KEY (bestelling_id) REFERENCES bestellingen (bestelling_id),
+FOREIGN KEY (promotie_klanten_id) REFERENCES promotie_klanten(promotie_klanten_id)
+);
+
+CREATE TABLE bestelde_ingredienten (
+bestelde_ingredienten_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ingredient_id INT(10) UNSIGNED NOT NULL,
+bestelde_pizzas_id INT(10) UNSIGNED NOT NULL,
+FOREIGN KEY (ingredient_id) REFERENCES ingredienten(ingredient_id),
+FOREIGN KEY (bestelde_pizzas_id) REFERENCES bestelde_pizzas(bestelde_pizzas_id)
+);
+
+INSERT INTO adressen (straat, huisnummer, woonplaats_id) VALUES
+('Bakkerstraat', '123', 1),
+('Sesamstraat', '456', 2),
+('Marialaan', '789', 3);
+
+INSERT INTO klanten (naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord) VALUES
+('Doe', 'John', 'john.doe@test.com', 1, '123456789', '098f6bcd4621d373cade4e832627b4f6'),
+('Smith', 'Jane', 'jane.smith@test.com', 2, '987654321', '098f6bcd4621d373cade4e832627b4f6'),
+('Williams', 'Tom', 'tom.williams@test.com', 3, '555111222', '098f6bcd4621d373cade4e832627b4f6');
+
+INSERT INTO promotie_klanten (promotie_id, klant_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3);

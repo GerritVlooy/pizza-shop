@@ -12,6 +12,11 @@ class AdresDAO extends DBConfig {
 
     private WoonplaatsDAO $woonplaatsDAO;
 
+    public function __construct()
+    {
+        $this->woonplaatsDAO = new WoonplaatsDAO();
+    }
+
     public function getById(int $id): Adres {
         $sql = "SELECT adres_id, straat, huisnummer, woonplaats_id FROM adressen WHERE adres_id = :adres_id";
 
@@ -22,7 +27,6 @@ class AdresDAO extends DBConfig {
         $stmt->execute(array(':adres_id' => $id));
         $rij = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        $this->woonplaatsDAO = new WoonplaatsDAO();
         $woonplaats = $this->woonplaatsDAO->getById((int) $rij['woonplaats_id']);
         $adres = new Adres($id, $rij['straat'], $rij['huisnummer'], $woonplaats);
 
@@ -52,7 +56,7 @@ class AdresDAO extends DBConfig {
         if($rij === false) {
             return null;
         }
-        $this->woonplaatsDAO = new WoonplaatsDAO();
+       
         $woonplaats = $this->woonplaatsDAO->getById($woonplaatsId);
 
         $adres = new Adres((int) $rij["adres_id"], $straat, $huisnummer, $woonplaats );

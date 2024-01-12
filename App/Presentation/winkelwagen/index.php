@@ -6,15 +6,19 @@
         <?php foreach ($_SESSION['winkelwagen'] as $index => $artikel): ?>
             <li>
                 <?php echo $artikel['hoeveelheid'] . 'x ' . $artikel['pizza']; ?>
-                <?php $array = []; ?>
+                <?php $ingredienten = []; ?>
                 <?php if (!empty($artikel['extras'])): ?>
                     (<?php foreach($artikel['extras'] as $extra): ?>
                         <?php echo $extra . " "; ?>
-                        <?php array_push($array, $extra); ?>
+                        <?php array_push($ingredienten, $extra); ?>
                     <?php endforeach; ?>)
                 <?php endif; ?>
-                <?php $pizzaPrijs = $winkelwagenService->berekenPrijsPizza((int) $artikel['hoeveelheid'], 
-                   $artikel['pizza'], $array)?>
+                <?php $pizzaPrijs = $winkelwagenService->berekenPrijsPizza(
+                        (int) $artikel['hoeveelheid'], 
+                         $artikel['pizza'], 
+                         $ingredienten, 
+                         $ingelogd
+                        )?>
                 <?php echo "€ " . $pizzaPrijs;?>
                 <?php $totaalSom += $pizzaPrijs;?>
                 <a href="?verwijder=<?php echo $index; ?>">Verwijder</a>

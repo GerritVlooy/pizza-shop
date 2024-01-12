@@ -24,4 +24,15 @@ Class Adres {
         return $this->id;
     }
 
+    public function getStraat(): string {
+        return $this->straat;
+    }
+
+    public function getHuisnummer(): string {
+        return $this->huisnummer;
+    }
+
+    public function getWoonplaats(): Woonplaats {
+        return $this->woonplaats;
+    }
 }

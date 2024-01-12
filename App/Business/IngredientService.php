@@ -10,8 +10,15 @@ Class IngredientService {
 
     Private IngredientDAO $ingredientDAO;
 
-    public function getIngredienten(): array {
+    public function __construct() {
         $this->ingredientDAO = new IngredientDAO();
+    }
+
+    public function getIngredienten(): array {
         return $this->ingredientDAO->getAlleIngredienten();
+    }
+
+    public function getByNaam(string $ingredientNaam): Ingredient {
+        return $this->ingredientDAO->getIngredientByNaam($ingredientNaam);
     }
 }

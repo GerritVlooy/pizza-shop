@@ -10,8 +10,15 @@ use App\Entities\Adres;
 
 class KlantDAO extends DBConfig{
 
+    private AdresDAO $adresDAO;
+
+    public function __construct()
+    {
+        $this->adresDAO = new AdresDAO();
+    }
+
     public function getByEmail(string $email): ?Klant {
-        $sql = "SELECT klant_id, naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord, opmerkingen 
+        $sql = "SELECT klant_id, naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord 
                 FROM klanten 
                 WHERE email = :email";
 
@@ -26,11 +33,7 @@ class KlantDAO extends DBConfig{
             return null;
         }
 
-        $adresDAO = new AdresDAO();
-        $adres = $adresDAO->getById((int) $rij['adres_id']);
-        if($rij['opmerkingen'] === null) {
-            $rij['opmerkingen'] = "";
-        }
+        $adres = $this->adresDAO->getById((int) $rij['adres_id']);
         
         $klant = new Klant(
             (int) $rij['klant_id'], 
@@ -39,8 +42,7 @@ class KlantDAO extends DBConfig{
             $email, 
             $adres, 
             $rij['telefoon_gsm'], 
-            $rij ['wachtwoord'],
-            $rij['opmerkingen']
+            $rij ['wachtwoord']
         );
 
         $dbh = null;
@@ -48,7 +50,7 @@ class KlantDAO extends DBConfig{
     }
 
     public function getById(int $id): Klant {
-        $sql = "SELECT klant_id, naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord, opmerkingen 
+        $sql = "SELECT klant_id, naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord 
                 FROM klanten 
                 WHERE klant_id = :klant_id";
 
@@ -56,14 +58,11 @@ class KlantDAO extends DBConfig{
             parent::$DB_PASSWORD);
 
         $stmt = $dbh->prepare($sql);
-        $stmt->execute(array(':email' => $email));
+        $stmt->execute(array(':klant_id' => $id));
         $rij = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $adresDAO = new AdresDAO();
-        $adres = $adresDAO->getById((int) $rij['adres_id']);
-        if($rij['opmerkingen'] === null) {
-            $rij['opmerkingen'] = "";
-        }
+        $adres = $this->adresDAO->getById((int) $rij['adres_id']);
+        
         if($rij['email'] === null) {
             $rij['email'] === "";
             $rij['wachtwoord'] === "";
@@ -76,8 +75,7 @@ class KlantDAO extends DBConfig{
             $rij["email"], 
             $adres, 
             $rij['telefoon_gsm'], 
-            $rij ['wachtwoord'],
-            $rij['opmerkingen']
+            $rij ['wachtwoord']
         );
 
         $dbh = null;
@@ -87,13 +85,13 @@ class KlantDAO extends DBConfig{
     public function create(
         string $naam,
         string $voornaam,
-        string $email,
+        ?string $email,
         int $adresId,
         string $telefoonGSM,
-        string $wachtwoord
+        ?string $wachtwoord
     ): int {
-        $sql = "INSERT INTO klanten (naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord, opmerkingen) 
-                VALUES (:naam, :voornaam, :email, :adres_id, :telefoon_gsm, :wachtwoord, :opmerkingen)";
+        $sql = "INSERT INTO klanten (naam, voornaam, email, adres_id, telefoon_gsm, wachtwoord) 
+                VALUES (:naam, :voornaam, :email, :adres_id, :telefoon_gsm, :wachtwoord)";
 
         $dbh = new PDO(parent::$DB_CONNSTRING, parent::$DB_USERNAME,
             parent::$DB_PASSWORD);
@@ -105,14 +103,34 @@ class KlantDAO extends DBConfig{
             ':email' => $email,
             ':adres_id' => $adresId,
             ':telefoon_gsm' => $telefoonGSM,
-            ':wachtwoord' => $wachtwoord,
-            ':opmerkingen' => ""
+            ':wachtwoord' => $wachtwoord
         ));
+
         $klantId = $dbh->lastInsertId();
 
         $dbh = null;
 
         return (int) $klantId;
+    }
+
+    public function update(
+        string $email, 
+        int $adresId,
+        ) {
+            $sql = "UPDATE klanten SET adres_id = :adres_id
+                    WHERE email = :email";
+
+            $dbh = new PDO(parent::$DB_CONNSTRING, parent::$DB_USERNAME,
+            parent::$DB_PASSWORD);
+
+            $stmt = $dbh->prepare($sql);
+
+            $stmt->execute(array(
+                ':adres_id' => $adresId,
+                ':email' => $email
+            ));
+            
+            $dbh = null;
     }
 
 }
