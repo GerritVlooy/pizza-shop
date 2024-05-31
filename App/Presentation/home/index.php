@@ -1,9 +1,10 @@
+<div class="container">
 <h1><?= $title ?></h1>
-<hr/>
+<br/>
 <div>
     <div>
         <h2>Pizza menu</h2>
-        <table>
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Pizza</th>
@@ -32,30 +33,53 @@
     <div>
         <h2>Pizza Keuze</h2>
         <form action="homeController.php" method="POST">
-            <label for="pizza">Maak uw keuze:</label>
-            <select name="pizza" id="pizza">
-                <?php foreach($pizzaLijst as $pizza):?>
-                    <option value="<?php echo $pizza->getNaam() ?>"><?php echo $pizza->getNaam() ?></option>
-                <?php endforeach;?>
-            </select>
-            <label for="hoeveelheid">Hoeveelheid:</label>
-            <input type="number" class="hoeveelheidVeld" name="hoeveelheid" id="hoeveelheid" value="1" min="1" required>
-            <h3>Extra's</h3>
-            <?php foreach($ingredientLijst as $ingredient):?>
-                <input type ="checkbox" id="<?php echo $ingredient->getNaam();?>" name="extras[]"
-                    value="<?php echo $ingredient->getNaam(); ?>"/>
-                <label for="<?php echo $ingredient->getNaam();?>"><?php echo $ingredient->getNaam() . " - € " . $ingredient->getPrijs();?></label>
-                <br/>
-            <?php endforeach;?>
+            <div class="input-group">
+                <div class="row">
+                    <label for="pizza" class="form-label col-6">Maak uw keuze:</label>
+                    <select name="pizza" id="pizza" class="dropdown-toggle col">
+                        <?php foreach($pizzaLijst as $pizza):?>
+                            <option value="<?php echo $pizza->getNaam() ?>" class="dropdown-item"><?php echo $pizza->getNaam() ?></option>
+                        <?php endforeach;?>
+                    </select>
+                 </div>
+            </div>
             <br/>
-            <input type="submit" name="toevoegenAanWinkelwagen" value="toevoegen"/>
+            <br/>
+            <div class="input-group row justify-content-start">
+                <div class="col-4 row">
+                    <div class="col">
+                    <label for="hoeveelheid" class="form-label">Hoeveelheid:</label>
+                    </div>
+                    <div class="col">
+                        <input type="number" class="form-control" name="hoeveelheid" id="hoeveelheid" value="1" min="1" required>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <h3>Extra's</h3>
+            <ul class="list-group group-item-action">
+            <?php foreach($ingredientLijst as $ingredient):?>
+                <li class="list-group-item list-group-item-action">
+                    <input class="form-check-input" type ="checkbox" id="<?php echo $ingredient->getNaam();?>" name="extras[]"
+                    value="<?php echo $ingredient->getNaam(); ?>"/>
+                    <label for="<?php echo $ingredient->getNaam();?>" class="form-label"><?php echo $ingredient->getNaam() . " - € " . $ingredient->getPrijs();?></label>
+                </li>
+                
+            <?php endforeach;?>
+            </ul>
+            <br/>
+            <input class="btn btn-primary" type="submit" name="toevoegenAanWinkelwagen" value="toevoegen"/>
         </form>
         <hr/>   
     </div>
     <?php require_once $winkelwagen; ?>
     <?php if(!empty($_SESSION['winkelwagen'])): ?>
-        <div>
-            <a href="afrekenenController.php">Afrekenen</a>
-        </dv>
+        <br/>
+        <div class="container">
+            <a href="afrekenenController.php" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Afrekenen</a>
+        </div>
     <?php endif; ?>
+    </div>
+        <br/>
 </div>
